@@ -1,1 +1,1 @@
-# solutionsinbi
+# SolutionsinBI
