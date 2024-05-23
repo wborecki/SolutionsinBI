@@ -1,0 +1,15 @@
+#' Hello World
+#'
+#' This is a simple function to test the package creation process.
+#' @param name
+#'
+#' @return A semple menssage
+#' @export
+#'
+#' @examples
+hello <- function(name) {
+  paste("Hello,", name, "!")
+}
+
+
+usethis::use_github()
