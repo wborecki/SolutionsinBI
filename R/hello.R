@@ -6,10 +6,8 @@
 #' @return A semple menssage
 #' @export
 #'
-#' @examples
+#' @examples Hello World!
 hello <- function(name) {
   paste("Hello,", name, "!")
 }
 
-
-usethis::use_github()
