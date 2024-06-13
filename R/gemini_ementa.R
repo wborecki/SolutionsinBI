@@ -76,7 +76,7 @@ gemini_ementa <- function(ementa,
     pb$tick()  # Avança a barra de progresso
     
     # Processa a ementa utilizando a função 'gemini_extrair' e salva os dados em um arquivo JSON
-    dados <- gemini_extrair(
+    dados <- SolutionsinBI::gemini_extrair(
       x = .x,
       instrucoes = instrucoes,
       perguntas = perguntas,

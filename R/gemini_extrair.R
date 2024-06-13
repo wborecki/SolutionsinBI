@@ -102,14 +102,14 @@ gemini_extrair <- function(x,
       if (httr2::resp_status(r1) == 200) {
         break
       } else if (httr2::resp_status(r1) == 429) {
-        message("Muitas requisições. Aguardando 1 minuto para continuar...")
+        message("Muitas requisi\\u00e7\\u00f5es. Aguardando 1 minuto para continuar...")
         Sys.sleep(61)
       } else {
-        stop("Erro na requisição: ", httr2::resp_status(r1))
+        stop("Erro na requisi\\u00e7\\u00e3o: ", httr2::resp_status(r1))
       }
     }, error = function(e) {
       if (grepl("HTTP 429", e$message)) {
-        message("Muitas requisições. Aguardando 1 minuto para continuar...")
+        message("Muitas requisi\\u00e7\\u00e3o Aguardando 1 minuto para continuar...")
         Sys.sleep(61)
       } else {
         stop(e$message)
@@ -117,7 +117,7 @@ gemini_extrair <- function(x,
     })
     
     if (i == 10) {
-      message("Número máximo de tentativas alcançado")
+      message("N\\u00famero m\\u00e1ximo de tentativas alcan\\u00e7ado")
       break
     }
     
