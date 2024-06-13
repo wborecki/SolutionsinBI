@@ -10,10 +10,8 @@ gemini_extrair(
   perguntas = NULL,
   chaves = NULL,
   api_key = NULL,
-  temperatura = 0.7,
-  var_top_p = 0.8,
-  var_top_k = 20,
-  model_version = "gemini-1.5-pro"
+  temperatura = 0.2,
+  model_version = "gemini-pro"
 )
 }
 \arguments{
@@ -29,11 +27,7 @@ gemini_extrair(
 
 \item{temperatura}{Numeric. Define a aleatoriedade do texto gerado. Valores mais baixos tornam o texto mais focado e determinístico (padrão = 0.7).}
 
-\item{var_top_p}{Numeric. Controla a diversidade ao considerar as palavras mais prováveis até que a soma de suas probabilidades seja p (padrão = 0.8).}
-
-\item{var_top_k}{Integer. Limita o número de palavras mais prováveis consideradas durante a geração (padrão = 20).}
-
-\item{model_version}{String. A versão do modelo a ser usada (padrão = "gemini-1.5-pro").}
+\item{model_version}{String. A versão do modelo a ser usada (padrão = "gemini-pro").}
 }
 \value{
 Lista. Retorna uma lista contendo as respostas geradas pela API.
