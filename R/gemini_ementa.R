@@ -84,6 +84,6 @@ gemini_ementa <- function(ementa,
       api_key = api_key,
       temperatura = temperatura
     ) %>%
-      write(arquivo)  # Escreve os dados processados no arquivo
+      write(.y)  # Escreve os dados processados no arquivo
   })
 }
