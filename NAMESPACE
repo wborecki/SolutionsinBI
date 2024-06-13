@@ -3,3 +3,4 @@
 export(gemini_ementa)
 export(gemini_extrair)
 export(gemini_ler)
+importFrom(magrittr, "%>%")
