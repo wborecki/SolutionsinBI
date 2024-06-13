@@ -8,9 +8,7 @@
 #' @param chaves Vetor de Strings. As chaves esperadas no resultado JSON.
 #' @param api_key String. A chave da API Google Gemini. Se não for fornecida, a função tentará usar a variável de ambiente "GEMINI_KEY".
 #' @param temperatura Numeric. Define a aleatoriedade do texto gerado. Valores mais baixos tornam o texto mais focado e determinístico (padrão = 0.7).
-#' @param var_top_p Numeric. Controla a diversidade ao considerar as palavras mais prováveis até que a soma de suas probabilidades seja p (padrão = 0.8).
-#' @param var_top_k Integer. Limita o número de palavras mais prováveis consideradas durante a geração (padrão = 20).
-#' @param model_version String. A versão do modelo a ser usada (padrão = "gemini-1.5-pro").
+#' @param model_version String. A versão do modelo a ser usada (padrão = "gemini-pro").
 #'
 #' @return Lista. Retorna uma lista contendo as respostas geradas pela API.
 #' @export
@@ -27,86 +25,107 @@
 #' print(resultado)
 #' }
 #' 
-gemini_extrair <- function(x, 
-                           instrucoes = NULL, 
-                           perguntas = NULL, 
-                           chaves = NULL, 
+gemini_extrair <- function(x,
+                           instrucoes = NULL,
+                           perguntas = NULL,
+                           chaves = NULL,
                            api_key = NULL,
-                           temperatura = 0.7,
-                           var_top_p = 0.8,
-                           var_top_k = 20,
-                           model_version = "gemini-1.5-pro"){
-  
-  if(is.null(x) || !is.character(x) || length(x) == 0){
-    stop("A entrada 'x' deve ser uma string não nula.")
+                           temperatura = 0.2,
+                           model_version = "gemini-pro") {
+  if (is.null(x) || !is.character(x) || length(x) == 0) {
+    stop("A entrada 'x' deve ser uma string n\\u00e3o nula.")
   }
   
-  if(is.null(api_key)){
-    api_key = Sys.getenv("GEMINI_KEY")
+  if (is.null(api_key)) {
+    api_key <- Sys.getenv("GEMINI_KEY")
     
-    if(api_key == ""){
-      stop("É necessário uma chave de API do Google Gemini para usar esta função. Para obter uma chave, visite https://ai.google.dev/gemini-api/docs/api-key?hl=pt-br")
+    if (api_key == "") {
+      stop(
+        "\\u00c9 necess\\u00e1rio uma chave de API do Google Gemini para usar esta fun\\u00e7\\u00e3o. Para obter uma chave, visite https://ai.google.dev/gemini-api/docs/api-key?hl=pt-br"
+      )
       
     }
   }
   
-  if (length(perguntas) != length(chaves)){
-    
+  if (length(perguntas) != length(chaves)) {
     stop("Perguntas e chaves devem ter o mesmo tamanho.")
   }
   
-  if(is.null(instrucoes)){
+  if (is.null(instrucoes)) {
     instrucoes <- "Escreva um texto sobre o seguinte tema:"
   }
   
-  if(is.null(perguntas)){
-    perguntas <- "1. Qual é o tema do texto?"
+  if (is.null(perguntas)) {
+    perguntas <- "1. Qual \\u00e9 o tema do texto?"
   }
   
-  if(is.null(chaves)){
+  if (is.null(chaves)) {
     chaves <- c("tema")
   }
-
+  
   perguntas <- stringr::str_c(perguntas, collapse = "\n")
   colunas <- stringr::str_c(chaves, collapse = ", ")
   
-  url <- paste0("https://generativelanguage.googleapis.com/v1beta/models/", model_version, ":generateContent?key=", api_key)
-  
+  url <-
+    paste0(
+      "https://generativelanguage.googleapis.com/v1beta/models/",
+      model_version,
+      ":generateContent?key=",
+      api_key
+    )
   h <- c(`Content-Type` = "application/json")
   
-  texto <- glue::glue("{instrucoes}, demarcada por três apóstrofes: ```{x}```. Responda às seguintes perguntas:
+  texto <-
+    glue::glue(
+      "{instrucoes}, demarcada por tr\\u00eas ap\\u00f3strofes: ```{x}```. Responda \\u00e0s seguintes perguntas:
                       {perguntas}
-                      retorne as respostas em formato json com as seguintes chaves: {colunas}")
+                      retorne as respostas em formato json com as seguintes chaves: {colunas}"
+    )
   
   body <- list(
-    contents = list(list(parts = list(list(text = texto)))),
-    generation_config = list(
-      temperature = temperatura,
-      top_p = var_top_p,
-      top_k = var_top_k
-    )
+    contents = list(list(parts = list(list(
+      text = texto
+    )))),
+    generation_config = list(temperature = temperatura)
   )
   
-  r1 <-tryCatch({ 
-    url |>
-    httr2::request() |>
-    httr2::req_headers(!!!h) |>
-    httr2::req_body_json(body) |>
-    httr2::req_perform()
-  }, error = function(e) {
-    stop("Erro ao realizar a requisição: ", e$message)
-  })
+  i <- 1
+  repeat {
+    tryCatch({
+      r1 <-
+        url %>%
+        httr2::request() %>%
+        httr2::req_headers(!!!h) %>%
+        httr2::req_body_json(body) %>%
+        httr2::req_perform()
+      
+      if (httr2::resp_status(r1) == 200) {
+        break
+      } else if (httr2::resp_status(r1) == 429) {
+        message("Muitas requisições. Aguardando 1 minuto para continuar...")
+        Sys.sleep(61)
+      } else {
+        stop("Erro na requisição: ", httr2::resp_status(r1))
+      }
+    }, error = function(e) {
+      if (grepl("HTTP 429", e$message)) {
+        message("Muitas requisições. Aguardando 1 minuto para continuar...")
+        Sys.sleep(61)
+      } else {
+        stop(e$message)
+      }
+    })
+    
+    if (i == 10) {
+      message("Número máximo de tentativas alcançado")
+      break
+    }
+    
+    i <- i + 1
+  }
   
-  reposta <- tryCatch({
-  r1 |>
-    httr2::resp_body_json() |>
-    purrr::pluck("candidates",1,"content","parts",1,"text") |>
-    stringr::str_extract("(?<=\n)\\{\\X+?\\}(?=\n``)") 
-  }, error = function(e) {
-    stop("Erro ao extrair a resposta: ", e$message)
-  })
-  
-  return(reposta)
-
+  r1 %>%
+    httr2::resp_body_json() %>%
+    purrr::pluck("candidates", 1, "content", "parts", 1, "text") %>%
+    stringr::str_extract("(?<=\n)\\{\\X+?\\}(?=\n``)")
 }
-
