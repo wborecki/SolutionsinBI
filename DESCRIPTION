@@ -1,12 +1,21 @@
 Package: SolutionsinBI
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Ferramentas de BI e Análise de Dados
+Version: 0.0.1
 Authors@R: 
-    person("First", "Last", , "willian.boreckI@solutionsinbi.com", role = c("aut", "cre"),
+    person("Willian", "Borecki", , "willian.borecki@solutionsinbi.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: Este pacote fornece ferramentas avançadas para Business Intelligence e análise de dados, facilitando a extração, manipulação e visualização de dados de diversas fontes.
+License: MIT
 Encoding: UTF-8
+Imports:
+    dplyr,
+    ggplot2,
+    stringr,
+    roxygen2,
+    git2r,
+    purrr,
+    glue,
+    httr2,
+    xml2
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
