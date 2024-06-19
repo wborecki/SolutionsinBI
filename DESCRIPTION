@@ -1,12 +1,12 @@
 Package: SolutionsinBI
 Title: Ferramentas de BI e Análise de Dados
 Version: 0.0.1
-Authors@R: 
-    person("Willian", "Borecki", , "willian.borecki@solutionsinbi.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+Authors@R: person("Willian", "Borecki", , "willian.borecki@solutionsinbi.com", role = c("aut", "cre"))
+Maintainer: Willian Borecki <willian.borecki@solutionsinbi.com>
 Description: Este pacote fornece ferramentas avançadas para Business Intelligence e análise de dados, facilitando a extração, manipulação e visualização de dados de diversas fontes.
 License: MIT + file LICENSE
 Encoding: UTF-8
+ByteCompile: true
 Imports:
     dplyr,
     stringr,
