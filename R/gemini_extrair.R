@@ -47,6 +47,10 @@ gemini_extrair <- function(x,
     }
   }
   
+  if (length(api_key) == 1) {
+    stop("A chave GEMINI_KEY deve ser uma string n\\u00e3o nula.")
+  }
+  
   if (length(perguntas) != length(chaves)) {
     stop("Perguntas e chaves devem ter o mesmo tamanho.")
   }
