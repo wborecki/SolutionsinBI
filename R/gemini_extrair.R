@@ -33,7 +33,7 @@ gemini_extrair <- function(x,
                            temperatura = 0.2,
                            model_version = "gemini-pro") {
   if (is.null(x) || !is.character(x) || length(x) == 0) {
-    stop("A entrada 'x' deve ser uma string n\\u00e3o nula.")
+    stop("A entrada 'x' deve ser uma string n\u00e3o nula.")
   }
   
   if (is.null(api_key)) {
@@ -41,7 +41,7 @@ gemini_extrair <- function(x,
     
     if (api_key == "") {
       stop(
-        "\\u00c9 necess\\u00e1rio uma chave de API do Google Gemini para usar esta fun\\u00e7\\u00e3o. Para obter uma chave, visite https://ai.google.dev/gemini-api/docs/api-key?hl=pt-br"
+        "\u00c9 necess\u00e1rio uma chave de API do Google Gemini para usar esta fun\u00e7\u00e3o. Para obter uma chave, visite https://ai.google.dev/gemini-api/docs/api-key?hl=pt-br"
       )
       
     }
@@ -106,22 +106,22 @@ gemini_extrair <- function(x,
       if (httr2::resp_status(r1) == 200) {
         break
       } else if (httr2::resp_status(r1) == 429) {
-        message("Muitas requisi\\u00e7\\u00f5es. Aguardando 1 minuto para continuar...")
-        Sys.sleep(61)
+        message("Muitas requisi\u00e7\u00f5es. Aguardando 1 minuto para continuar...")
+        Sys.sleep(65)
       } else {
-        stop("Erro na requisi\\u00e7\\u00e3o: ", httr2::resp_status(r1))
+        stop("Erro na requisi\u00e7\u00e3o: ", httr2::resp_status(r1))
       }
     }, error = function(e) {
       if (grepl("HTTP 429", e$message)) {
-        message("Muitas requisi\\u00e7\\u00e3o Aguardando 1 minuto para continuar...")
-        Sys.sleep(61)
+        message("Muitas requisi\u00e7\u00e3o Aguardando 1 minuto para continuar...")
+        Sys.sleep(65)
       } else {
         stop(e$message)
       }
     })
     
     if (i == 10) {
-      message("N\\u00famero m\\u00e1ximo de tentativas alcan\\u00e7ado")
+      message("N\u00famero m\u00e1ximo de tentativas alcan\u00e7ado")
       break
     }
     

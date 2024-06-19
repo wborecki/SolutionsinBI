@@ -38,28 +38,28 @@ gemini_ementa <- function(ementa,
                           temperatura = 0.2,
                           diretorio = "." ) {
   
-  # Verifica se o diretório existe; se não, cria-o
+
   if (!dir.exists(diretorio)) {
     dir.create(diretorio, recursive = TRUE)
   }
   
-  # Se o identificador não for fornecido, cria uma sequência numérica
+
   if (is.null(identificador)) {
     id <- seq_along(ementa)
   } else {
     id <- identificador
   }
   
-  # Verifica arquivos JSON existentes no diretório
+
   arquivos_existentes <- list.files(diretorio, full.names = TRUE, pattern = "IA_.*\\.json$")
   
-  # Remove ementas existentes para evitar duplicatas
+
   if (length(arquivos_existentes) > 0) {
     ementa <- ementa[!id %in% stringr::str_extract(arquivos_existentes, "(?<=_)[^.]*")]
     id <- id[!id %in% stringr::str_extract(arquivos_existentes, "(?<=_)[^.]*")]
   }
   
-  # Cria uma barra de progresso para acompanhar o processamento
+
   pb <- progress::progress_bar$new(
     format = "[:bar] :percent eta: :eta",  
     total = length(id),   
@@ -67,15 +67,15 @@ gemini_ementa <- function(ementa,
     width = 60   
   )
   
-  # Define o caminho do arquivo de saída
+
   arquivos <- file.path(diretorio, paste0("IA_", id, ".json"))
   
- # Itera sobre as listas 'ementa' e 'id', processando cada par
+
   purrr::walk2(ementa, arquivos, ~{
     
-    pb$tick()  # Avança a barra de progresso
+    pb$tick() 
     
-    # Processa a ementa utilizando a função 'gemini_extrair' e salva os dados em um arquivo JSON
+    
     dados <- SolutionsinBI::gemini_extrair(
       x = .x,
       instrucoes = instrucoes,
@@ -84,6 +84,6 @@ gemini_ementa <- function(ementa,
       api_key = api_key,
       temperatura = temperatura
     ) %>%
-      write(.y)  # Escreve os dados processados no arquivo
+      write(.y)  
   })
 }
